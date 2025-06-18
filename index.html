@@ -14,6 +14,7 @@
     <label id="username">Loading...</label>
 
     <script>
+        alert("ok1");
         // اتصال به Telegram Web App
         window.Telegram.WebApp.ready();
 
@@ -24,6 +25,7 @@
         } else {
             document.getElementById('username').innerText = 'No user data available';
         }
+        alert("ok4");
     </script>
     <script src="https://tapi.bale.ai/miniapp.js?2"></script>
 </body>
