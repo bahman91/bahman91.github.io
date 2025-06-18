@@ -1,8 +1,30 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <title>start</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telegram Mini App</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+        #username { font-size: 20px; margin-top: 20px; }
+    </style>
 </head>
 <body>
-  11111
+    <h1>Welcome to Mini App</h1>
+    <label id="username">Loading...</label>
+
+    <script>
+        // اتصال به Telegram Web App
+        window.Telegram.WebApp.ready();
+
+        // دریافت اطلاعات کاربر
+        const user = window.Telegram.WebApp.initDataUnsafe.user;
+        if (user) {
+            document.getElementById('username').innerText = `Username: @${user.username || 'Unknown'}`;
+        } else {
+            document.getElementById('username').innerText = 'No user data available';
+        }
+    </script>
+    <script src="https://tapi.bale.ai/miniapp.js?2"></script>
 </body>
 </html>
