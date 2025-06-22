@@ -14,19 +14,16 @@
     <label id="username">Loading...</label>
 
     <script>
-        alert("ok2");
         // اتصال به Telegram Web App
         window.Telegram.WebApp.ready();
-alert("ok21");
+
         // دریافت اطلاعات کاربر
         const user = window.Telegram.WebApp.initDataUnsafe.user;
-        alert("ok22");
         if (user) {
             document.getElementById('username').innerText = `Username: @${user.username || 'Unknown'}`;
         } else {
             document.getElementById('username').innerText = 'No user data available';
         }
-        alert("ok4");
     </script>
     <script src="https://tapi.bale.ai/miniapp.js?2"></script>
 </body>
