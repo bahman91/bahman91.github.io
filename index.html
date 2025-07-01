@@ -1,30 +1,328 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Telegram Mini App</title>
+    <title>تایید شماره موبایل</title>
+    <link href="bootstrap.min.css" rel="stylesheet">
+    <link href="all.min.css" rel="stylesheet">
+    <!--<script src="https://tapi.bale.ai/miniapp.js?1"></script> -->
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
-        #username { font-size: 20px; margin-top: 20px; }
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .card {
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            background: rgba(255,255,255,0.95);
+        }
+        .form-control {
+            border-radius: 15px;
+            border: 2px solid #e9ecef;
+            padding: 15px 20px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+        .btn-primary {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 15px;
+            padding: 15px 30px;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+        .timer {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            margin: 15px 0;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .success-message {
+            background: linear-gradient(45deg, #56ab2f, #a8e6cf);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            font-size: 18px;
+            font-weight: 600;
+            text-align: center;
+            margin: 20px 0;
+            animation: fadeInUp 0.5s ease;
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .mobile-number {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 600;
+            color: #495057;
+        }
+        .loading {
+            display: none;
+        }
+        .spinner-border {
+            width: 1.5rem;
+            height: 1.5rem;
+        }
     </style>
 </head>
 <body>
-    <h1>Welcome to Mini App</h1>
-    <label id="username">Loading...</label>
+    <div class="container-fluid px-3 py-4">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="card">
+                    <div class="card-body p-4">
+                        <div class="text-center mb-4">
+                           
+                            <h4 class="fw-bold">تایید شماره موبایل</h4>
+                        </div>
 
+                        <div class="mobile-number" id="mobileDisplay">
+                            
+                            <span id="phoneNumber">-</span>
+                        </div>
+
+                        <form id="otpForm">
+                            <div class="mb-3">
+                                <label for="otpInput" class="form-label fw-bold">
+                                کد تایید
+                                </label>
+                                <input type="text" class="form-control text-center" id="otpInput" 
+                                       placeholder="کد 6 رقمی را وارد کنید" maxlength="6" required>
+                            </div>
+
+                            <div class="timer" id="timer">
+                                
+                                <span id="countdown">02:00</span>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100 mb-3">
+                                <span class="loading">
+                                    <span class="spinner-border spinner-border-sm me-2"></span>
+                                    در حال پردازش...
+                                </span>
+                                <span class="normal-text">
+                                تایید و ثبت
+                                </span>
+                            </button>
+                        </form>
+
+                        <div id="successMessage" style="display: none;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="jquery.min.js"></script>
+    <script src="bootstrap.bundle.min.js"></script>
+    
     <script>
-        // اتصال به Telegram Web App
-        window.Telegram.WebApp.ready();
+        $(document).ready(function() {
+            //const userId = window.Bale.WebApp.initDataUnsafe.user.id;
 
-        // دریافت اطلاعات کاربر
-        const user = window.Telegram.WebApp.initDataUnsafe.user;
-        if (user) {
-            document.getElementById('username').innerText = `Username: @${user.username || 'Unknown'}`;
-        } else {
-            document.getElementById('username').innerText = 'No user data available';
-        }
+
+
+            // دریافت شماره موبایل از query string
+            const urlParams = new URLSearchParams(window.location.search);
+            const mobileNumber = urlParams.get('phone');
+            
+            if (mobileNumber) {
+                $('#phoneNumber').text(mobileNumber);
+                sendOTP(mobileNumber);
+            } else {
+                $('#phoneNumber').text('شماره موبایل یافت نشد');
+                $('#timer').html('<i class="fas fa-exclamation-triangle me-2"></i>خطا در دریافت شماره موبایل');
+                return;
+            }
+
+            // شروع شمارنده 2 دقیقه‌ای
+            let timeLeft = 240; // 4 دقیقه بر حسب ثانیه
+            const timerInterval = setInterval(function() {
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                const formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                $('#countdown').text(formattedTime);
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    $('#timer').html('<i class="fas fa-times-circle me-2"></i>زمان تایید کد به پایان رسید');
+                    $('#timer').css('background', 'linear-gradient(45deg, #dc3545, #c82333)');
+                }
+                
+                timeLeft--;
+            }, 1000);
+
+            // ارسال OTP
+            function sendOTP(phoneNumber) {
+            console.log(phoneNumber);
+            $.ajax({
+                url: 'https://api.trustedtsp.ir/api/v1/users/send-otp',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    mobileNumber: phoneNumber
+                }),
+                success: function(response) {
+                    console.log('OTP sent successfully:', response);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error sending OTP:', error);
+                    $('#timer').html('خطا در ارسال کد تایید');
+                    $('#timer').css('background', 'linear-gradient(45deg, #dc3545, #c82333)');
+                }
+            });
+            }
+
+            // اعتبارسنجی و ارسال فرم
+            $('#otpForm').on('submit', function(e) {
+            e.preventDefault();
+            
+            const otp = $('#otpInput').val().trim();
+            
+            // بررسی صحت کد OTP
+            if (otp.length !== 6 || !/^\d+$/.test(otp)) {
+                alert('کد تایید باید 6 رقم باشد');
+                return;
+            }
+            
+            // نمایش loading
+            $('.loading').show();
+            $('.normal-text').hide();
+            $('#otpForm button').prop('disabled', true);
+
+            console.log("otp:"+otp);
+            
+            // مرحله 1: ورود و دریافت توکن
+            $.ajax({
+                url: 'https://api.trustedtsp.ir/api/v1/users/login',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    mobileNumber: mobileNumber,
+                    otp: otp
+                }),
+                success: function(response) {
+                    console.log('Login successful:', response);
+                    
+                    // دریافت توکن
+                    const token = response.data.accessToken;
+                    
+                    if (!token) {
+                        $('.loading').hide();
+                        $('.normal-text').show();
+                        $('#otpForm button').prop('disabled', false);
+                        alert('خطا در دریافت توکن');
+                        return;
+                    }
+
+                    console.log("Token:" + token);
+                    
+                    // تولید پسورد
+                    const password = "BaleApi_" + mobileNumber;
+                    
+                    // مرحله 2: تنظیم پسورد
+                    $.ajax({
+                        url: 'https://api.trustedtsp.ir/api/v1/users/set-password',
+                        method: 'POST',
+                        contentType: 'application/json-patch+json',
+                        headers: {
+                            'Authorization': 'Bearer ' + token
+                        },
+                        data: JSON.stringify({
+                            password: password
+                        }),
+                        success: function(response) {
+                            console.log('Password set successfully:', response);
+                            
+                            // مخفی کردن فرم
+                            $('#otpForm').hide();
+                            $('#mobileDisplay').hide();
+                            
+                            // نمایش پیام موفقیت
+                            $('#successMessage').html(
+                                '<div class="success-message">' +
+                                'تایید با موفقیت انجام شد!<br>' +
+                                'رمز عبور شما تنظیم گردید.' +
+                                '</div>'
+                            ).show();
+                            
+                            // بستن صفحه بعد از 3 ثانیه
+                            setTimeout(function() {
+                                window.close();
+                            }, 3000);
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error setting password:', error);
+                            $('.loading').hide();
+                            $('.normal-text').show();
+                            $('#otpForm button').prop('disabled', false);
+                            
+                            let errorMessage = 'خطا در تنظیم رمز عبور';
+                            if (xhr.status === 401) {
+                                errorMessage = 'توکن نامعتبر است';
+                            } else if (xhr.status === 400) {
+                                errorMessage = 'خطا در اطلاعات ارسالی';
+                            }
+                            
+                            alert(errorMessage);
+                        }
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error('Login error:', error);
+                    $('.loading').hide();
+                    $('.normal-text').show();
+                    $('#otpForm button').prop('disabled', false);
+                    
+                    let errorMessage = 'خطا در ورود';
+                    if (xhr.status === 400) {
+                        errorMessage = 'کد تایید نامعتبر است';
+                    } else if (xhr.status === 408) {
+                        errorMessage = 'زمان تایید کد به پایان رسیده است';
+                    }
+                    
+                    alert(errorMessage);
+                }
+            });
+            });
+            // فقط عدد در کد OTP
+            $('#otpInput').on('input', function() {
+                this.value = this.value.replace(/[^0-9]/g, '');
+            });
+        });
     </script>
-    <script src="https://tapi.bale.ai/miniapp.js?2"></script>
 </body>
 </html>
