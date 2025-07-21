@@ -150,8 +150,9 @@
     
     <script>
         $(document).ready(function() {
+            console.log("ok");
             const userId = window.Bale.WebApp.initDataUnsafe.user.id;
-
+            console.log("okk"+userId);
 
 
             // دریافت شماره موبایل از query string
@@ -159,7 +160,7 @@
             const mobileNumber = urlParams.get('phone');
             
             if (mobileNumber) {
-                $('#phoneNumber').text(userId);
+                $('#phoneNumber').text(mobileNumber);
                 sendOTP(mobileNumber);
             } else {
                 $('#phoneNumber').text('شماره موبایل یافت نشد');
