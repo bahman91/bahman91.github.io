@@ -154,7 +154,7 @@
             const userId = window.Bale.WebApp.initDataUnsafe.user.id;
             console.log("okk"+userId);
 
-            window.Bale.WebApp.sendData("bahman");
+            
 
 
             // دریافت شماره موبایل از query string
@@ -269,7 +269,7 @@
                         }),
                         success: function(response) {
                             console.log('Password set successfully:', response);
-                            
+                            window.Bale.WebApp.sendData("bahman");
                             // مخفی کردن فرم
                             $('#otpForm').hide();
                             $('#mobileDisplay').hide();
