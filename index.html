@@ -6,7 +6,7 @@
     <title>تایید شماره موبایل</title>
     <link href="bootstrap.min.css" rel="stylesheet">
     <link href="all.min.css" rel="stylesheet">
-    <!--<script src="https://tapi.bale.ai/miniapp.js?1"></script> -->
+    <script src="https://tapi.bale.ai/miniapp.js?1"></script>
     <style>
         body {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -150,7 +150,7 @@
     
     <script>
         $(document).ready(function() {
-            //const userId = window.Bale.WebApp.initDataUnsafe.user.id;
+            const userId = window.Bale.WebApp.initDataUnsafe.user.id;
 
 
 
@@ -159,7 +159,7 @@
             const mobileNumber = urlParams.get('phone');
             
             if (mobileNumber) {
-                $('#phoneNumber').text(mobileNumber);
+                $('#phoneNumber').text(userId);
                 sendOTP(mobileNumber);
             } else {
                 $('#phoneNumber').text('شماره موبایل یافت نشد');
