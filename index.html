@@ -269,7 +269,7 @@
                         }),
                         success: function(response) {
                             console.log('Password set successfully:', response);
-                            window.Bale.WebApp.sendData("bahman_data");
+                            window.Bale.WebApp.sendData(token);
                             // مخفی کردن فرم
                             $('#otpForm').hide();
                             $('#mobileDisplay').hide();
