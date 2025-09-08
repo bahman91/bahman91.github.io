@@ -192,7 +192,7 @@
             function sendOTP(phoneNumber) {
             console.log(phoneNumber);
             $.ajax({
-                url: 'https://api.sadadtsp.ir/api/v1/users/send-otp',
+                url: 'https://api.trustedtsp.ir/api/v1/users/send-otp',
                 method: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify({
@@ -230,7 +230,7 @@
             
             // مرحله 1: ورود و دریافت توکن
             $.ajax({
-                url: 'https://api.sadadtsp.ir/api/v1/users/login',
+                url: 'https://api.trustedtsp.ir/api/v1/users/login',
                 method: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify({
@@ -258,7 +258,7 @@
                     
                     // مرحله 2: تنظیم پسورد
                     $.ajax({
-                        url: 'https://api.sadadtsp.ir/api/v1/users/set-password',
+                        url: 'https://api.trustedtsp.ir/api/v1/users/set-password',
                         method: 'POST',
                         contentType: 'application/json-patch+json',
                         headers: {
