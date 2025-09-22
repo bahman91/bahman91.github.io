@@ -310,7 +310,7 @@
                     $('.normal-text').show();
                     $('#otpForm button').prop('disabled', false);
                     
-                    let errorMessage = 'خطا در ورود';
+                    let errorMessage = 'خطا در ورود . لطفا جهت ثبت نام به سایت اعتماد پردازش سداد مراجعه بفرمایید';
                     if (xhr.status === 400) {
                         errorMessage = 'کد تایید نامعتبر است';
                     } else if (xhr.status === 408) {
