@@ -269,7 +269,7 @@
                         }),
                         success: function(response) {
                             console.log('Password set successfully:', response);
-                            window.Bale.WebApp.sendData(token);
+                            window.Bale.WebApp.sendData("Token:?:"+token);
                             // مخفی کردن فرم
                             $('#otpForm').hide();
                             $('#mobileDisplay').hide();
