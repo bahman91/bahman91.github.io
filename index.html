@@ -152,12 +152,13 @@
         $(document).ready(function() {
             const userId = window.Bale.WebApp.initDataUnsafe.user.id;
 
-            
+            console.log(userId);
 
 
             // دریافت شماره موبایل از query string
             const urlParams = new URLSearchParams(window.location.search);
             const mobileNumber = urlParams.get('phone');
+            console.log(mobileNumber);
             
             if (mobileNumber) {
                 $('#phoneNumber').text(mobileNumber);
